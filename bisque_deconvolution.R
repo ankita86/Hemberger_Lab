@@ -162,14 +162,9 @@ pd <- colData(se) |>
     tidyr::pivot_longer(!Sample_ID, names_to = "cluster_name", values_to = "prop") |>
     left_join(pd)
 	
-prop_long$Sample_ID <- factor(prop_long$Sample_ID , levels = c("WT1", "WT2", "WT3", "WT4","WT5", "WT6" ,"WT7", "WT8", "WT9", "KO1", "KO2", "KO3", "KO4", "KO5", "KO6", "KO7", "KO8", "KO9"))
-
+prop_long$Sample_ID <- factor(prop_long$Sample_ID , levels = c("WT5", "WT7", "WT8", "WT9", "KO5", "KO6", "KO8", "KO9"))
  return(list(all=est_prop,prop=est_prop$bulk.props, markers=marker_stats, plot_data=prop_long, top_35_Markers_deconvo=top_35_markers))
 
 }
  
 
-
-
-
- 
