@@ -11,9 +11,10 @@ library(patchwork)
 options(future.globals.maxSize = 3e+09)
 
 
-##Study accession numbers: Arrayexpression accession numbers: E-MTAB-11491, E-MTAB-12889. Processing and QC of expression matrices for 27 samples was performed using code adapted from Winkler et al. For details, #please visit - https://zenodo.org/records/10259662
-## Adding age as a metadata "Condition" to scRNA expression profiles using Table S1 from Winkler et al. 2024 and post-qced expression matrices were merged.
-## Link: #https://www.sciencedirect.com/science/article/pii/S0092867424000588?via%3Dihub 
+#Study accession numbers: Arrayexpress accession numbers: E-MTAB-11491, E-MTAB-12889. Processing and QC of expression matrices for 27 samples was performed using code adapted from Winkler et al. manuscript entitled - "The cycling and aging mouse female reproductive tract at single-cell resolution"
+# Link: https://pubmed.ncbi.nlm.nih.gov/38325365/
+# Codes for QC and processing (Winkler et al.) are available at https://zenodo.org/records/10259662 
+# Adding age as a metadata column "Condition" to scRNA expression profiles using information from Table S1 - Winkler et al. 2024 and post-qced expression matrices were merged.
 
 
 ## read merged dataset and split it into layers based on the metadata column - Condition (which is indicative of age) to facilitate integration
