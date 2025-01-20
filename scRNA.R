@@ -1,4 +1,4 @@
-## Script to create aging-based scRNA reference dataset of mouse uterus
+## R script to create aging-based scRNA reference dataset of mouse uterus
 
 ## packages to install
 library(Seurat)
