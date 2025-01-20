@@ -15,7 +15,9 @@ source("Deconvo/functions.R")
 # read single cell data created using scRNA.R 
 x <-readRDS("UT_Winkler_aging.rds")
 
-#extract relevant cell types based on the expression profile of classical markers and convert seurat object to SingleCellExperiment object -
+#Annotate and extract relevant cell types based on the expression profile of classical markers 
+#Convert seurat object to SingleCellExperiment object -
+
 y <-subset(x, idents=c(6,8,0,1,2,5,7,9,3,4,10,11,12,13,14,19,21,24))
 
 metadata <-y@meta.data
