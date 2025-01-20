@@ -74,4 +74,102 @@ plot_composition_bar(
  ) + scale_fill_manual(values = mycolors)
  
 
+
+########## function - full_dataset ##########################################################
+
+## this function can be customised for the number of markers used 
+full_dataset <- function (sce) {
+ 
+ marker_stats <-get_mean_ratio(sce,
+    cellType_col = "cluster_name")
+   
+  
+bulk <- read.table("Atp11a_raw_counts.txt", sep="\t", header=T)
+table(duplicated(bulk$Gene))
+rownames(bulk) <- make.names(bulk$Gene, unique = TRUE)
+bulk <-bulk[,-1]
+
+
+marker_genes <- marker_stats |>
+    filter(MeanRatio.rank <= 35 & gene %in% rownames(bulk))
+	
+top_35_markers <- marker_stats |> filter(MeanRatio.rank <= 35)
+	
+#marker_genes |> count(cellType.target)
+	
+marker_genes <- marker_genes |> pull(gene)
+
+
+ samples <-colnames(bulk)
+ genes <-rownames(bulk)
+ 
+ 
+se <- SummarizedExperiment(assays = list(counts = as.matrix(bulk)),
+                           colData = samples,
+                           rowData = genes)
+ 
+ colnames(colData(se))[colnames(colData(se)) == "X"] <- "Sample_ID"
+ 
+ 
+
+ 
+ ### make objects for bisque
+ ## for bulk
+ 
+ exp_set_bulk <- Biobase::ExpressionSet(
+    assayData = assays(se[marker_genes, ])$counts,
+    phenoData = AnnotatedDataFrame(
+        as.data.frame(colData(se))[c("Sample_ID")]
+    )
+)
+ 
+
+ ## for sce
+ exp_set_sce <- Biobase::ExpressionSet(
+     assayData = as.matrix(assays(sce[marker_genes, ])$counts),
+     phenoData = AnnotatedDataFrame(
+         as.data.frame(colData(sce))[, c("cluster_name", "orig.ident")]
+     ) )
+	 
+zero_cell_filter <- colSums(exprs(exp_set_sce)) != 0
+message("Exclude ", sum(!zero_cell_filter), " cells")
+#> Exclude 0 cells
+
+exp_set_sce <- exp_set_sce[, zero_cell_filter] 
+	 
+	 
+est_prop <- ReferenceBasedDecomposition(
+    bulk.eset = exp_set_bulk,
+    sc.eset = exp_set_sce,
+    cell.types = "cluster_name",
+    subject.names = "orig.ident",
+    use.overlap = FALSE)
+
+
+est_prop$bulk.props <- t(est_prop$bulk.props)
+
+
+write.table(est_prop$bulk.props, file="Estimated_proportions_top35markers_18_samples.txt", sep="\t", quote=FALSE)
+
+### plotting
+pd <- colData(se) |>
+    as.data.frame() |>
+    select(Sample_ID)
+	
+	prop_long <- est_prop$bulk.props |>
+    as.data.frame() |>
+    tibble::rownames_to_column("Sample_ID") |>
+    tidyr::pivot_longer(!Sample_ID, names_to = "cluster_name", values_to = "prop") |>
+    left_join(pd)
+	
+prop_long$Sample_ID <- factor(prop_long$Sample_ID , levels = c("WT1", "WT2", "WT3", "WT4","WT5", "WT6" ,"WT7", "WT8", "WT9", "KO1", "KO2", "KO3", "KO4", "KO5", "KO6", "KO7", "KO8", "KO9"))
+
+ return(list(all=est_prop,prop=est_prop$bulk.props, markers=marker_stats, plot_data=prop_long, top_35_Markers_deconvo=top_35_markers))
+
+}
+ 
+
+
+
+
  
