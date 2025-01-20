@@ -1,4 +1,5 @@
- 
+## R script to perform deconvolution analysis -
+
 library(Biobase)
 library(BisqueRNA)
  
@@ -14,14 +15,14 @@ source("Deconvo/functions.R")
 # read single cell data created using scRNA.R 
 x <-readRDS("UT_Winkler_aging.rds")
 
-#extract relevant cell types and convert seurat object to single-cell experiment
+#extract relevant cell types based on the expression profile of classical markers and convert seurat object to SingleCellExperiment object -
 y <-subset(x, idents=c(6,8,0,1,2,5,7,9,3,4,10,11,12,13,14,19,21,24))
 
 metadata <-y@meta.data
 
 metadata$cluster_name <- NA
 
-## Annotate epithelial, endothelial, immune and stromal clusters based on the expression profile of classical markers -
+## Annotate epithelial, endothelial, immune and stromal clusters -
 
 metadata$cluster_name[which(y@meta.data$seurat_clusters =="6" | y@meta.data$seurat_clusters =="8")] <- "Epithelial"
 
@@ -45,7 +46,8 @@ y.sce <- as.SingleCellExperiment(y)
 
 
 
-## calling functions - These functions are designed based on the bisque implementation in the tool - DeconvoBuddies that allows selection of cell-type specific marker genes using Mean Ratio method  
+## calling function - full_dataset - This function is written based on the analysis script of a tool - DeconvoBuddies. This tool allows implementation of Mean Ratio method to select cell-type specific marker genes which is used as an input for further downstream analysis by bisque.
+
 #Link : https://research.libd.org/DeconvoBuddies/articles/Deconvolution_Benchmark_DLPFC.html
 
 full_sketched<-full_dataset(sce=y.sce)
