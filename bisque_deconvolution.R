@@ -46,16 +46,16 @@ y.sce <- as.SingleCellExperiment(y)
 
 
 
-## calling function - full_dataset - This function is written based on the analysis script of a tool - DeconvoBuddies. This tool allows implementation of Mean Ratio method to select cell-type specific marker genes which is used as an input for further downstream analysis by bisque.
+## calling function - deconvo_data - This function is written based on the analysis script of a tool - DeconvoBuddies. This tool allows implementation of Mean Ratio method to select cell-type specific marker genes which is used as an input for further downstream analysis by bisque.
 
 #Link : https://research.libd.org/DeconvoBuddies/articles/Deconvolution_Benchmark_DLPFC.html
 
-full_sketched<-full_dataset(sce=y.sce)
-#subset_8_sketched<-subset_dataset(sce=y.sce)
+results<-deconvo_data(sce=y.sce)
+
 
 
 ## plotting
-plot_data<-full_sketched$plot_data
+plot_data<-results$plot_data
 
 #V1
 plot_data$cluster_name <- factor(plot_data$cluster_name , levels = c("LE", "GE", "Endothelial", "Stromal", "B cell", "T cell", "DC", "NKC", "Neutrophil", "Macrophage"))
@@ -63,7 +63,7 @@ plot_data$cluster_name <- factor(plot_data$cluster_name , levels = c("LE", "GE",
 nb.cols <- 10
 mycolors <- colorRampPalette(brewer.pal(8, "RdBu"))(nb.cols)
 
-#pdf("Full_dataset.pdf")
+
  
 plot_composition_bar(
      plot_data,
@@ -75,10 +75,10 @@ plot_composition_bar(
  
 
 
-########## function - full_dataset ##########################################################
+########## function - deconvo_data -##########################################################
 
 ## this function can be customised for the number of markers used 
-full_dataset <- function (sce) {
+deconvo_data <- function (sce) {
  
  marker_stats <-get_mean_ratio(sce,
     cellType_col = "cluster_name")
@@ -149,7 +149,7 @@ est_prop <- ReferenceBasedDecomposition(
 est_prop$bulk.props <- t(est_prop$bulk.props)
 
 
-write.table(est_prop$bulk.props, file="Estimated_proportions_top35markers_18_samples.txt", sep="\t", quote=FALSE)
+write.table(est_prop$bulk.props, file="Estimated_proportions_top35markers.txt", sep="\t", quote=FALSE)
 
 ### plotting
 pd <- colData(se) |>
