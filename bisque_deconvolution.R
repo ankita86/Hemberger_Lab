@@ -48,7 +48,7 @@ y.sce <- as.SingleCellExperiment(y)
 
 
 
-## calling function - deconvo_data - This function is written based on the analysis script of a tool - DeconvoBuddies. This tool allows implementation of Mean Ratio method to select cell-type specific marker genes which is used as an input for further downstream analysis by bisque.
+## calling function - deconvo_data - This function is written based on the analysis script of DeconvoBuddies. This tool allows implementation of Mean Ratio method to select cell-type specific marker genes which is used as an input for further downstream analysis by bisque.
 
 #Link : https://research.libd.org/DeconvoBuddies/articles/Deconvolution_Benchmark_DLPFC.html
 
