@@ -7,4 +7,5 @@
 
 ## Data -
 Annotation_clusters_scRNA.xlsx -> List of markers used to annotate clusters of the integrated scRNA dataset
+Mean_Ratio_cell_type_specific_genes -> We used Mean Ratio method implemented in the tool DeconvoBuddies to find cell-type-specific markers.
 
